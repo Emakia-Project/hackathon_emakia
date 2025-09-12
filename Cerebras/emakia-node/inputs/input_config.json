@@ -1,0 +1,14 @@
+{
+    "user_query": "How do I report misinformation?",
+    "context": {
+      "platform": "web",
+      "language": "en",
+      "trust_score": 0.72
+    },
+    "flags": {
+      "urgent": true,
+      "sensitive": false
+    }
+  }
+  
+  
