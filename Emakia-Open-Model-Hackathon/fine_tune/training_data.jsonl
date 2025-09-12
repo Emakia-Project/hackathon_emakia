@@ -1,0 +1,21 @@
+{"text": "Hello world! This is a great day!", "label": "safe", "confidence": 0.95}
+{"text": "I love this new technology!", "label": "safe", "confidence": 0.92}
+{"text": "This product is amazing!", "label": "safe", "confidence": 0.88}
+{"text": "Check out this awesome feature!", "label": "safe", "confidence": 0.90}
+{"text": "Have a wonderful day everyone!", "label": "safe", "confidence": 0.94}
+{"text": "This is unacceptable behavior.", "label": "unsafe", "confidence": 0.87}
+{"text": "I can't believe this happened.", "label": "unsafe", "confidence": 0.82}
+{"text": "This is really disappointing.", "label": "unsafe", "confidence": 0.85}
+{"text": "Not happy with this result.", "label": "unsafe", "confidence": 0.80}
+{"text": "This needs to be fixed immediately.", "label": "unsafe", "confidence": 0.89}
+{"text": "Spam message here!", "label": "spam", "confidence": 0.95}
+{"text": "Click here for free money!", "label": "spam", "confidence": 0.98}
+{"text": "Limited time offer!", "label": "spam", "confidence": 0.93}
+{"text": "Act now before it's too late!", "label": "spam", "confidence": 0.96}
+{"text": "Don't miss this opportunity!", "label": "spam", "confidence": 0.91}
+{"text": "I hate this group of people.", "label": "hate_speech", "confidence": 0.94}
+{"text": "This is discriminatory content.", "label": "hate_speech", "confidence": 0.92}
+{"text": "Violent content here.", "label": "violence", "confidence": 0.89}
+{"text": "This promotes harm.", "label": "violence", "confidence": 0.87}
+{"text": "Inappropriate adult content.", "label": "adult_content", "confidence": 0.93}
+{"text": "This is false information.", "label": "misinformation", "confidence": 0.88}

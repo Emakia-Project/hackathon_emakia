@@ -1,0 +1,16 @@
+tweet,label,emoji
+"Hello world! This is a great day!",safe,😊
+"I love this new technology!",safe,❤️
+"This product is amazing!",safe,👍
+"Check out this awesome feature!",safe,🎉
+"Have a wonderful day everyone!",safe,🌞
+"This is unacceptable behavior.",unsafe,😠
+"I can't believe this happened.",unsafe,😞
+"This is really disappointing.",unsafe,😔
+"Not happy with this result.",unsafe,😕
+"This needs to be fixed immediately.",unsafe,⚠️
+"Spam message here!",spam,📧
+"Click here for free money!",spam,💰
+"Limited time offer!",spam,⏰
+"Act now before it's too late!",spam,🚨
+"Don't miss this opportunity!",spam,🎯
