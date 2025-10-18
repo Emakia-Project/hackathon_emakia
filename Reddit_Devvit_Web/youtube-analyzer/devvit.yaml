@@ -1,0 +1,7 @@
+name: youtube-analyzer
+version: 0.1.0
+entry: main.ts
+subreddit: emakia-dev
+permissions:
+  - redditAPI
+
