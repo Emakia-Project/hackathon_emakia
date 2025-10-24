@@ -1,0 +1,12 @@
+name: analyze-youtube
+version: 0.0.1
+runtime: blocks
+http:
+  enabled: true
+env:
+  OPENAI_API_KEY: ""
+settings:
+  - name: OPENAI_API_KEY
+    type: string
+    isSecret: true
+    scope: installation
