@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emakia Node - Content Analysis Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .input-section {
+            margin-bottom: 40px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .agent-selection {
+            margin-bottom: 20px;
+        }
+
+        .agent-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .agent-checkbox {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .agent-checkbox:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
+        }
+
+        .agent-checkbox input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .agent-checkbox.checked {
+            border-color: #667eea;
+            background: #e3f2fd;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #e1e5e9;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .summary-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+        }
+
+        .risk-indicator {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-left: 10px;
+        }
+
+        .risk-none { background: #d4edda; color: #155724; }
+        .risk-low { background: #fff3cd; color: #856404; }
+        .risk-medium { background: #f8d7da; color: #721c24; }
+        .risk-high { background: #f8d7da; color: #721c24; }
+        .risk-critical { background: #721c24; color: white; }
+
+        .agent-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .agent-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid #e1e5e9;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .agent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .agent-name {
+            font-weight: 600;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .severity-badge {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .severity-none { background: #d4edda; color: #155724; }
+        .severity-low { background: #fff3cd; color: #856404; }
+        .severity-medium { background: #f8d7da; color: #721c24; }
+        .severity-high { background: #f8d7da; color: #721c24; }
+        .severity-critical { background: #721c24; color: white; }
+
+        .score-bar {
+            width: 100%;
+            height: 8px;
+            background: #e1e5e9;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        .details {
+            margin-top: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .recommendations {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e1e5e9;
+        }
+
+        .recommendation {
+            background: #f8f9fa;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            font-size: 14px;
+            border-left: 3px solid #667eea;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 5px solid #dc3545;
+        }
+
+        .health-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-healthy { color: #28a745; }
+        .status-error { color: #dc3545; }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .agent-results {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Emakia Node</h1>
+            <p>Advanced Content Analysis Platform</p>
+        </div>
+
+        <div class="main-content">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="textInput">Enter text to analyze:</label>
+                    <textarea 
+                        id="textInput" 
+                        placeholder="Type or paste your text here...&#10;&#10;Examples:&#10;- 'This is hate speech and violence'&#10;- 'Women can\'t drive as well as men'&#10;- 'Studies show this conspiracy theory is true'&#10;- 'Share this viral post now!'"
+                    ></textarea>
+                </div>
+
+                <div class="agent-selection">
+                    <label>Select analysis agents:</label>
+                    <div class="agent-checkboxes">
+                        <div class="agent-checkbox checked" data-agent="toxicity">
+                            <input type="checkbox" id="toxicity" checked>
+                            <label for="toxicity">Toxicity Detection</label>
+                        </div>
+                        <div class="agent-checkbox checked" data-agent="bias">
+                            <input type="checkbox" id="bias" checked>
+                            <label for="bias">Bias Detection</label>
+                        </div>
+                        <div class="agent-checkbox checked" data-agent="misinformation">
+                            <input type="checkbox" id="misinformation" checked>
+                            <label for="misinformation">Misinformation Detection</label>
+                        </div>
+                        <div class="agent-checkbox checked" data-agent="coordination">
+                            <input type="checkbox" id="coordination" checked>
+                            <label for="coordination">Coordination Detection</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="analyzeText()">
+                        Analyze Content
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearResults()">
+                        Clear Results
+                    </button>
+                    <button class="btn btn-secondary" onclick="loadExample()">
+                        Load Example
+                    </button>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing content...</p>
+            </div>
+
+            <div class="results" id="results"></div>
+        </div>
+    </div>
+
+    <div class="health-status" id="healthStatus">
+        <span id="statusText">Checking...</span>
+    </div>
+
+    <script>
+        // Check API health on page load
+        window.addEventListener('load', checkHealth);
+
+        // Agent checkbox functionality
+        document.querySelectorAll('.agent-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('click', function() {
+                const input = this.querySelector('input[type="checkbox"]');
+                input.checked = !input.checked;
+                this.classList.toggle('checked', input.checked);
+            });
+        });
+
+        async function checkHealth() {
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                
+                const statusElement = document.getElementById('statusText');
+                const statusDiv = document.getElementById('healthStatus');
+                
+                if (data.status === 'healthy') {
+                    statusElement.textContent = '✓ Healthy';
+                    statusDiv.className = 'health-status status-healthy';
+                } else {
+                    statusElement.textContent = '✗ Error';
+                    statusDiv.className = 'health-status status-error';
+                }
+            } catch (error) {
+                const statusElement = document.getElementById('statusText');
+                const statusDiv = document.getElementById('healthStatus');
+                statusElement.textContent = '✗ Offline';
+                statusDiv.className = 'health-status status-error';
+            }
+        }
+
+        async function analyzeText() {
+            const textInput = document.getElementById('textInput');
+            const text = textInput.value.trim();
+
+            if (!text) {
+                alert('Please enter some text to analyze.');
+                return;
+            }
+
+            // Get selected agents
+            const selectedAgents = [];
+            document.querySelectorAll('.agent-checkbox input[type="checkbox"]:checked').forEach(checkbox => {
+                selectedAgents.push(checkbox.id);
+            });
+
+            if (selectedAgents.length === 0) {
+                alert('Please select at least one analysis agent.');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+
+            try {
+                const response = await fetch('/api/classify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        text,
+                        agents: selectedAgents
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    displayResults(data);
+                } else {
+                    displayError(data.error || 'Analysis failed');
+                }
+            } catch (error) {
+                displayError('Network error: ' + error.message);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        function displayResults(data) {
+            const resultsDiv = document.getElementById('results');
+            
+            let html = `
+                <div class="summary-card">
+                    <div class="agent-header">
+                        <h3>Analysis Summary</h3>
+                        <span class="risk-indicator risk-${data.overallRisk}">${data.overallRisk.toUpperCase()}</span>
+                    </div>
+                    
+                    <div class="details">
+                        <div class="detail-item">
+                            <span class="detail-label">Total Issues:</span>
+                            <span>${data.summary.totalIssues}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Critical:</span>
+                            <span>${data.summary.criticalIssues}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">High:</span>
+                            <span>${data.summary.highIssues}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Medium:</span>
+                            <span>${data.summary.mediumIssues}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Low:</span>
+                            <span>${data.summary.lowIssues}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add agent results
+            html += '<div class="agent-results">';
+            
+            Object.entries(data.analyses).forEach(([agentName, analysis]) => {
+                if (analysis.error) {
+                    html += `
+                        <div class="agent-card">
+                            <div class="agent-header">
+                                <span class="agent-name">${agentName}</span>
+                                <span class="severity-badge severity-error">Error</span>
+                            </div>
+                            <div class="error">
+                                <strong>Error:</strong> ${analysis.error}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    const score = analysis.toxicityScore || analysis.biasScore || analysis.misinformationScore || analysis.coordinationScore || 0;
+                    
+                    html += `
+                        <div class="agent-card">
+                            <div class="agent-header">
+                                <span class="agent-name">${agentName}</span>
+                                <span class="severity-badge severity-${analysis.severity}">${analysis.severity}</span>
+                            </div>
+                            
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: ${score * 100}%"></div>
+                            </div>
+                            <p><strong>Score:</strong> ${(score * 100).toFixed(1)}%</p>
+                            
+                            <div class="details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Status:</span>
+                                    <span>${analysis.isToxic || analysis.hasBias || analysis.hasMisinformation || analysis.hasCoordination ? 'Issues Detected' : 'Clean'}</span>
+                                </div>
+                            </div>
+                            
+                            ${analysis.recommendations && analysis.recommendations.length > 0 ? `
+                                <div class="recommendations">
+                                    <h4>Recommendations:</h4>
+                                    ${analysis.recommendations.map(rec => `<div class="recommendation">${rec}</div>`).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+            });
+            
+            html += '</div>';
+
+            resultsDiv.innerHTML = html;
+            resultsDiv.style.display = 'block';
+        }
+
+        function displayError(message) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="error">
+                    <strong>Error:</strong> ${message}
+                </div>
+            `;
+            resultsDiv.style.display = 'block';
+        }
+
+        function clearResults() {
+            document.getElementById('textInput').value = '';
+            document.getElementById('results').style.display = 'none';
+        }
+
+        function loadExample() {
+            const examples = [
+                "This is hate speech and violence against minorities. Kill them all!",
+                "Women can't drive as well as men, it's just a fact. They're too emotional.",
+                "Studies show this conspiracy theory is true! The government is hiding everything from us.",
+                "Share this viral post now! Everyone needs to see this urgent breaking news!"
+            ];
+            
+            const randomExample = examples[Math.floor(Math.random() * examples.length)];
+            document.getElementById('textInput').value = randomExample;
+        }
+
+        // Auto-resize textarea
+        document.getElementById('textInput').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+    </script>
+</body>
+</html> 

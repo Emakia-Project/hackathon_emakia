@@ -1,0 +1,109 @@
+{
+  "sample_validation_result": {
+    "status": "success",
+    "timestamp": "2024-01-15T10:30:00Z",
+    "content_type": "text",
+    "validation": {
+      "is_valid": true,
+      "confidence": 0.95,
+      "violations": [],
+      "suggestions": [],
+      "validation_type": "ai_model",
+      "model_provider": "openai",
+      "details": {
+        "basic_validation": {
+          "is_valid": true,
+          "violations": [],
+          "suggestions": [],
+          "confidence": 1.0,
+          "validation_type": "basic_rules"
+        },
+        "ai_validation": {
+          "is_valid": true,
+          "violations": [],
+          "suggestions": [],
+          "confidence": 0.95,
+          "validation_type": "ai_model",
+          "model_provider": "openai",
+          "rules_checked": [
+            "no_hate_speech",
+            "no_violence",
+            "no_harmful_content",
+            "appropriate_language",
+            "no_spam"
+          ]
+        }
+      }
+    },
+    "classification": {
+      "category": "safe",
+      "confidence": 0.92,
+      "reasoning": "The content appears to be a standard greeting message with no harmful or inappropriate content.",
+      "all_categories": [
+        "safe",
+        "unsafe",
+        "inappropriate",
+        "spam",
+        "hate_speech",
+        "violence",
+        "adult_content",
+        "misinformation"
+      ],
+      "model_provider": "openai",
+      "classification_type": "ai_model",
+      "threshold_met": true,
+      "threshold": 0.8
+    },
+    "metadata": {
+      "processing_time": 1.23,
+      "model_used": "gpt-4",
+      "tokens_used": 150
+    },
+    "errors": []
+  },
+  "sample_classification_result": {
+    "category": "hate_speech",
+    "confidence": 0.87,
+    "reasoning": "The content contains discriminatory language targeting a specific group.",
+    "all_categories": [
+      "safe",
+      "unsafe",
+      "inappropriate",
+      "spam",
+      "hate_speech",
+      "violence",
+      "adult_content",
+      "misinformation"
+    ],
+    "model_provider": "openai",
+    "classification_type": "ai_model",
+    "threshold_met": true,
+    "threshold": 0.8
+  },
+  "sample_error_result": {
+    "status": "error",
+    "timestamp": "2024-01-15T10:30:00Z",
+    "content_type": "text",
+    "validation": {
+      "is_valid": false,
+      "confidence": 0.0,
+      "violations": ["Processing error occurred"],
+      "suggestions": ["Try again later or contact support"],
+      "validation_type": "error",
+      "model_provider": "none",
+      "details": {}
+    },
+    "classification": {
+      "category": "unknown",
+      "confidence": 0.0,
+      "reasoning": "Classification failed due to processing error",
+      "all_categories": [],
+      "model_provider": "none",
+      "classification_type": "error",
+      "threshold_met": false,
+      "threshold": 0.0
+    },
+    "metadata": {},
+    "errors": ["API rate limit exceeded"]
+  }
+}

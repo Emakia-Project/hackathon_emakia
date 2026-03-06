@@ -1,0 +1,14 @@
+{
+  "content": "This is an example content that needs to be validated and classified.",
+  "content_type": "text",
+  "options": {
+    "validation_threshold": 0.8,
+    "confidence_threshold": 0.7,
+    "model_provider": "openai"
+  },
+  "metadata": {
+    "user_id": "user123",
+    "session_id": "session456",
+    "timestamp": "2024-01-15T10:30:00Z"
+  }
+}

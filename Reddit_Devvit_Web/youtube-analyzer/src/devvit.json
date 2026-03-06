@@ -1,0 +1,8 @@
+{
+    "name": "youtube-content-analyzer",
+    "version": "0.1.0",
+    "entry": "client/index.html",
+    "permissions": ["redditAPI"],
+    "subreddit": "emakia-dev"
+  }
+  
