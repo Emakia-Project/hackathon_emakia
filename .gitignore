@@ -4,3 +4,4 @@ __pycache__/
 *.pyc
 debug_logs.txt
 .streamlit/secrets.toml
+env/
